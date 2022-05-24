@@ -24,7 +24,6 @@ int getBalance(Tree *N){
 }
 
 Tree *rightRotate(Tree *y){
-    //cout<<"Rotacao simples direita na entrada da chave = "<<y->chave<<endl;
 
     Tree *x = y->esq;
     Tree *T2 = x->dir;
@@ -41,7 +40,6 @@ Tree *rightRotate(Tree *y){
 }
 
 Tree *leftRotate(Tree *x){
-    //cout<<"Rotacao simples a esquerda na entrada da chave = "<<x->chave<<endl;
 
     Tree *y = x->dir;
     Tree *T2 = y->esq;
@@ -63,36 +61,24 @@ Tree *balanceamentoPosInsercao(Tree *raiz,int chave){
 
     int balanco = getBalance(raiz);
 
-    /// ( rotação simples a direita )
-
     if(balanco > 1 && chave < raiz->esq->key){
 
         return rightRotate(raiz);
     }
-
-    /// ( rotação simples a esquerda )
 
     if(balanco < -1 && chave > raiz->dir->key){
 
         return leftRotate(raiz);
     }
 
-    /// esq dir ( dupla rotação a direita )
-
     if(balanco > 1 && chave > raiz->esq->key){
-
-        //cout<<"************Rotacao dupla a direita na entrada da chave = "<<chave<<endl;
-
+        
         raiz->esq = leftRotate(raiz->esq);
 
         return rightRotate(raiz);
     }
 
-    /// dir esq ( dupla rotação a esquerda )
-
     if(balanco < -1 && chave < raiz->dir->key){
-
-        //cout<<"************Rotacao dupla a esquerda na entrada da chave = "<<chave<<endl;
 
         raiz->dir = rightRotate(raiz->dir);
 
@@ -104,7 +90,6 @@ Tree *balanceamentoPosInsercao(Tree *raiz,int chave){
 
 Tree *putMine(Tree *raiz,int chave){
 
-    // insere normalmente como numa arvore sem balanceamento
     Tree *aux = (Tree *)malloc(sizeof(Tree));
     aux->key = chave;
     aux->dir = NULL;
@@ -120,9 +105,7 @@ Tree *putMine(Tree *raiz,int chave){
     }else{
 
         if(raiz->key == chave){
-            //printf("raiz->key = %d\n",raiz->key);
             raiz->equals+=1;
-            //printf("raiz->equals = %d\n",raiz->equals);
             return raiz;
         }
 
@@ -139,8 +122,6 @@ Tree *putMine(Tree *raiz,int chave){
         }
     }
 
-    /// parte do balanceamento
-
     raiz = balanceamentoPosInsercao(raiz,chave);
 
     return raiz;
@@ -151,7 +132,6 @@ void infixa(Tree *r, int *limite){
         infixa(r->esq, limite);
         if(r->equals > 1 && *limite > 0){
             printf("%d ",r->key);
-            //printf("limite -> %d\n",*limite);
             *limite-=1;
         }
         infixa(r->dir, limite);
@@ -166,7 +146,6 @@ Tree *clearBuffer(Tree *raiz){
     raiz->dir = clearBuffer(raiz->dir);
 
     if(raiz->esq==NULL && raiz->dir==NULL){
-        //printf("\nchave deletada = %d\n",raiz->key);
         free(raiz);raiz = NULL;return raiz;
     }
 }
@@ -176,7 +155,6 @@ int number_of_duplicates(Tree *node) {
     if (node) {
         ans = number_of_duplicates(node->esq);
         if(node->equals > 1) {
-            //printf("value: %d  frequency: %d\n", node->key, node->equals);
             ans += node->equals;
         }
         ans += number_of_duplicates(node->dir);
@@ -212,8 +190,6 @@ void posfixa(Tree *raiz){
 }
 
 int main() {
-    //freopen("in", "r", stdin);
-    //freopen("out", "w", stdout);
     int n, k, limite;
     int cnt = 0;
     Tree *root;
@@ -225,13 +201,9 @@ int main() {
 
         while(n--) {
             int v; scanf("%d", &v);
-            //inserts(&node, v);
-            //insertion(v, &root);
             root = putMine(root,v);
         }
-
-        //printf("qqqqqqqqroot->key = %d\n",root->key);
-
+        
         int r = number_of_duplicates(root);
         printf("%d\n", r);
 
@@ -239,21 +211,13 @@ int main() {
             printf("empty\n");
             continue;
         }
-
-        //inorderTraversal(root, &k, k);
+        
         infixa(root, &limite);
-        //printf("\n");
         cnt++;
-       // release_mem(node);
-       if(cnt)
+        if(cnt)
          printf("\n");
 
-       // printf("chaves na arvore:\n");
-        //posfixa(root);
-
-        root = clearBuffer(root);
-        //printf("POSFIXA\n");
-        //posfixa(root); // so pra validar a "limpeza" na arvore
+         root = clearBuffer(root);
     }
     return 0;
 }
